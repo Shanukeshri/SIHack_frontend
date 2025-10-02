@@ -260,7 +260,7 @@ const handleSubmit = async (e) => {
                   <div className="form-group">
                     <label htmlFor="mobile-otp">Enter OTP</label>
                     <input
-                      type="tel"
+                      type="password"
                       id="mobile-otp"
                       placeholder="OTP"
                       required

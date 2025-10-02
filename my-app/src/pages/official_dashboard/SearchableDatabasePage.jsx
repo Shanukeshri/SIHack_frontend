@@ -1,27 +1,110 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 // Note: Replace with your actual logo path
 const logoUrl = "ashok1.jpeg";
 
 // --- MODIFIED: The mock database now includes Status, RejectionReason, and DocumentURL ---
 const mockDB = [
-    { "Claim_ID": "BLR/SD/ANE/0123", "Mobile_No": "9018371234", "Name": "Ram Sita", "Community": "Gond", "Village": "Adur", "Taluka": "Anekal", "District": "Bangalore", "State": "Karnataka", "Status": "Rejected", "RejectionReason": "Insufficient land evidence provided.", "DocumentURL": null },
-    { "Claim_ID": "MYS/HD/NAN/0456", "Mobile_No": "9987654321", "Name": "Aarav Sharma", "Community": "Bhils", "Village": "Hullahalli", "Taluka": "Nanjangud", "District": "Mysore", "State": "Karnataka", "Status": "Approved", "RejectionReason": null, "DocumentURL": "/documents/MYS-0456-Approval.pdf" },
-    { "Claim_ID": "DWD/KL/HUB/0789", "Mobile_No": "9765432109", "Name": "Priya Patel", "Community": "Santhal", "Village": "Rayanal", "Taluka": "Hubli", "District": "Dharwad", "State": "Karnataka", "Status": "Hold", "RejectionReason": "Awaiting SDLC clarification.", "DocumentURL": null },
-    { "Claim_ID": "BLG/OS/TTG/1011", "Mobile_No": "9510014815", "Name": "Rohan Mehta", "Community": "Gond", "Village": "Dumerbahal", "Taluka": "Titlagarh", "District": "Balangir", "State": "Odisha", "Status": "Approved", "RejectionReason": null, "DocumentURL": "/scanned.jpeg" },
-    { "Claim_ID": "SHI/SG/SHI/1213", "Mobile_No": "9543210987", "Name": "Anika Singh", "Community": "Khasi", "Village": "Kumsi", "Taluka": "Sagar", "District": "Shimoga", "State": "Karnataka", "Status": "Rejected", "RejectionReason": "GPS coordinates do not match submitted map.", "DocumentURL": null },
-    { "Claim_ID": "MAN/UD/UDU/1415", "Mobile_No": "9432109876", "Name": "Vikram Reddy", "Community": "Toda", "Village": "Brahmavar", "Taluka": "Udupi", "District": "Udupi", "State": "Karnataka", "Status": "Hold", "RejectionReason": "Discrepancy in witness statements.", "DocumentURL": null },
-    // --- NEW User with specified phone number and Approved status ---
-    { "Claim_ID": "CHN/TP/SRI/2025", "Mobile_No": "9501927612", "Name": "Lakshmi Devi", "Community": "Gond", "Village": "Sriperumbudur", "Taluka": "Tiruvallur", "District": "Chennai", "State": "Tamil Nadu", "Status": "Approved", "RejectionReason": null, "DocumentURL": "/documents/CHN-2025-Approval.pdf" }
+  {
+    Claim_ID: "BLR/SD/ANE/0123",
+    Mobile_No: "9018371234",
+    Name: "Ram Sita",
+    Community: "Gond",
+    Village: "Adur",
+    Taluka: "Anekal",
+    District: "Bangalore",
+    State: "Karnataka",
+    Status: "Rejected",
+    RejectionReason: "Insufficient land evidence provided.",
+    DocumentURL: null,
+  },
+  {
+    Claim_ID: "MYS/HD/NAN/0456",
+    Mobile_No: "9987654321",
+    Name: "Aarav Sharma",
+    Community: "Bhils",
+    Village: "Hullahalli",
+    Taluka: "Nanjangud",
+    District: "Mysore",
+    State: "Karnataka",
+    Status: "Approved",
+    RejectionReason: null,
+    DocumentURL: "/documents/MYS-0456-Approval.pdf",
+  },
+  {
+    Claim_ID: "DWD/KL/HUB/0789",
+    Mobile_No: "9765432109",
+    Name: "Priya Patel",
+    Community: "Santhal",
+    Village: "Rayanal",
+    Taluka: "Hubli",
+    District: "Dharwad",
+    State: "Karnataka",
+    Status: "Hold",
+    RejectionReason: "Awaiting SDLC clarification.",
+    DocumentURL: null,
+  },
+  {
+    Claim_ID: "BLG/OS/TTG/1011",
+    Mobile_No: "9510014815",
+    Name: "Rohan Mehta",
+    Community: "Gond",
+    Village: "Dumerbahal",
+    Taluka: "Titlagarh",
+    District: "Balangir",
+    State: "Odisha",
+    Status: "Approved",
+    RejectionReason: null,
+    DocumentURL: "/scanned.jpeg",
+  },
+  {
+    Claim_ID: "SHI/SG/SHI/1213",
+    Mobile_No: "9543210987",
+    Name: "Anika Singh",
+    Community: "Khasi",
+    Village: "Kumsi",
+    Taluka: "Sagar",
+    District: "Shimoga",
+    State: "Karnataka",
+    Status: "Rejected",
+    RejectionReason: "GPS coordinates do not match submitted map.",
+    DocumentURL: null,
+  },
+  {
+    Claim_ID: "MAN/UD/UDU/1415",
+    Mobile_No: "9432109876",
+    Name: "Vikram Reddy",
+    Community: "Toda",
+    Village: "Brahmavar",
+    Taluka: "Udupi",
+    District: "Udupi",
+    State: "Karnataka",
+    Status: "Hold",
+    RejectionReason: "Discrepancy in witness statements.",
+    DocumentURL: null,
+  },
+  // --- NEW User with specified phone number and Approved status ---
+  {
+    Claim_ID: "CHN/TP/SRI/2025",
+    Mobile_No: "9501927612",
+    Name: "Lakshmi Devi",
+    Community: "Gond",
+    Village: "Sriperumbudur",
+    Taluka: "Tiruvallur",
+    District: "Chennai",
+    State: "Tamil Nadu",
+    Status: "Approved",
+    RejectionReason: null,
+    DocumentURL: "/documents/CHN-2025-Approval.pdf",
+  },
 ];
-
 
 // --- Main Searchable Database Page Component ---
 export default function SearchableDatabasePage() {
   const [dateTime, setDateTime] = useState(new Date());
   const [allClaims, setAllClaims] = useState([]);
   const [filteredClaims, setFilteredClaims] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     setAllClaims(mockDB);
@@ -29,21 +112,31 @@ export default function SearchableDatabasePage() {
   }, []);
 
   useEffect(() => {
-    const results = allClaims.filter(claim =>
-      Object.values(claim).some(value => 
+    const results = allClaims.filter((claim) =>
+      Object.values(claim).some((value) =>
         String(value).toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
     setFilteredClaims(results);
   }, [searchTerm, allClaims]);
-  
+
   useEffect(() => {
     const timer = setInterval(() => setDateTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
-  
-  const formattedDate = dateTime.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', weekday: 'short' });
-  const formattedTime = dateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+
+  const formattedDate = dateTime.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    weekday: "short",
+  });
+  const formattedTime = dateTime.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
 
   const pageStyles = `
     .db-page-container { margin: 0; font-family: "Poppins", Helvetica, sans-serif; background-color: #f0f2f5; }
@@ -85,84 +178,186 @@ export default function SearchableDatabasePage() {
     .download-btn:hover { background-color: #2c3a8e; }
     .rejection-reason { font-size: 13px; color: #842029; font-style: italic; }
   `;
-  
+
+  const [downloadingUrl, setDownloadingUrl] = useState(null);
+
   return (
     <div className="db-page-container">
       <style>{pageStyles}</style>
       <div className="db-page">
         <div className="header-bar">
-            <p className="date-time">{formattedDate} | {formattedTime}</p>
-             <div className="header-links"> <a href="#">Skip to main content</a> <div className="separator"></div> <a href="#">Screen Reader Access</a> <a href="#">Text Size</a> <div className="text-size-controls"> <div className="text-size-btn">-</div> <div className="text-size-btn">A</div> <div className="text-size-btn">+</div> </div> <div className="color-controls"> <div className="color-box" style={{ backgroundColor: "white" }}></div> <div className="color-box" style={{ backgroundColor: "#ffea02" }}></div> <div className="color-box" style={{ backgroundColor: "#f88eef" }}></div> <div className="color-box" style={{ backgroundColor: "#3702ff" }}></div> </div> <a href="#">हिन्दी में</a> </div>
+          <p className="date-time">
+            {formattedDate} | {formattedTime}
+          </p>
+          <div className="header-links">
+            {" "}
+            <a href="#">Skip to main content</a>{" "}
+            <div className="separator"></div>{" "}
+            <a href="#">Screen Reader Access</a> <a href="#">Text Size</a>{" "}
+            <div className="text-size-controls">
+              {" "}
+              <div className="text-size-btn">-</div>{" "}
+              <div className="text-size-btn">A</div>{" "}
+              <div className="text-size-btn">+</div>{" "}
+            </div>{" "}
+            <div className="color-controls">
+              {" "}
+              <div
+                className="color-box"
+                style={{ backgroundColor: "white" }}
+              ></div>{" "}
+              <div
+                className="color-box"
+                style={{ backgroundColor: "#ffea02" }}
+              ></div>{" "}
+              <div
+                className="color-box"
+                style={{ backgroundColor: "#f88eef" }}
+              ></div>{" "}
+              <div
+                className="color-box"
+                style={{ backgroundColor: "#3702ff" }}
+              ></div>{" "}
+            </div>{" "}
+            <a href="#">हिन्दी में</a>{" "}
+          </div>
         </div>
         <header className="top-menu">
-            <div className="logo-container"> <img className="ashok-logo" src={logoUrl} alt="Ministry Logo" /> <div className="logo-text">Ministry of Tribal Affairs</div> </div>
-            <nav className="navbar"> <a href="/" className="nav-item">Home</a> <a href="/OfficialDashboard" className="nav-item">Dashboard</a> <a href="#" className="nav-item">About</a> <a href="#" className="nav-item">Act & Rule</a> <a href="#" className="nav-item">Update</a> <a href="#" className="nav-item">Feedback</a> <a href="#" className="nav-item">Public Grievances</a> <a href="/" className="nav-item">Logout</a> </nav>
+          <div className="logo-container">
+            {" "}
+            <img
+              className="ashok-logo"
+              src={logoUrl}
+              alt="Ministry Logo"
+            />{" "}
+            <div className="logo-text">Ministry of Tribal Affairs</div>{" "}
+          </div>
+          <nav className="navbar">
+            {" "}
+            <a href="/" className="nav-item">
+              Home
+            </a>{" "}
+            <a href="/OfficialDashboard" className="nav-item">
+              Dashboard
+            </a>{" "}
+            <a href="#" className="nav-item">
+              About
+            </a>{" "}
+            <a href="#" className="nav-item">
+              Act & Rule
+            </a>{" "}
+            <a href="#" className="nav-item">
+              Update
+            </a>{" "}
+            <a href="#" className="nav-item">
+              Feedback
+            </a>{" "}
+            <a href="#" className="nav-item">
+              Public Grievances
+            </a>{" "}
+            <a href="/" className="nav-item">
+              Logout
+            </a>{" "}
+          </nav>
         </header>
 
         <main className="db-main-content">
-            <div className="search-container">
-                <input type="text" className="search-input" placeholder="Search by any detail..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-            </div>
-            <div className="db-table-container">
-                <table className="db-table">
-                    <thead>
-                        <tr>
-                            <th>Claim ID</th>
-                            <th>Name</th>
-                            <th>Mobile No</th>
-                            <th>Village</th>
-                            <th>District</th>
-                            <th>State</th>
-                            {/* --- NEW: Status and Information Columns --- */}
-                            <th style={{textAlign: 'center'}}>Status</th>
-                            <th style={{textAlign: 'center'}}>Information</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredClaims.map((claim) => (
-                            <tr key={claim.Claim_ID}>
-                                <td>{claim.Claim_ID}</td>
-                                <td>{claim.Name}</td>
-                                <td>{claim.Mobile_No}</td>
-                                <td>{claim.Village}</td>
-                                <td>{claim.District}</td>
-                                <td>{claim.State}</td>
-                                {/* --- Status Column --- */}
-                                <td className="status-cell">
-                                    {claim.Status === 'Approved' && (
-                                        <span className="status-tag status-approved">Approved</span>
-                                    )}
-                                    {claim.Status === 'Rejected' && (
-                                        <span className="status-tag status-rejected">Rejected</span>
-                                    )}
-                                    {claim.Status === 'Hold' && (
-                                        <span className="status-tag status-hold">On Hold</span>
-                                    )}
-                                </td>
-                                {/* --- Information Column --- */}
-                                <td className="status-cell">
-                                    {claim.Status === 'Approved' && claim.DocumentURL && (
-                                        <a href={claim.DocumentURL} className="download-btn" target="_blank" rel="noopener noreferrer">Download</a>
-                                    )}
-                                    {claim.Status === 'Rejected' && claim.RejectionReason && (
-                                        <span className="rejection-reason">{claim.RejectionReason}</span>
-                                    )}
-                                    {/* Nothing for On Hold */}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+          <div className="search-container">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by any detail..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="db-table-container">
+            <table className="db-table">
+              <thead>
+                <tr>
+                  <th>Claim ID</th>
+                  <th>Name</th>
+                  <th>Mobile No</th>
+                  <th>Village</th>
+                  <th>District</th>
+                  <th>State</th>
+                  {/* --- NEW: Status and Information Columns --- */}
+                  <th style={{ textAlign: "center" }}>Status</th>
+                  <th style={{ textAlign: "center" }}>Information</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredClaims.map((claim) => (
+                  <tr key={claim.Claim_ID}>
+                    <td>{claim.Claim_ID}</td>
+                    <td>{claim.Name}</td>
+                    <td>{claim.Mobile_No}</td>
+                    <td>{claim.Village}</td>
+                    <td>{claim.District}</td>
+                    <td>{claim.State}</td>
+                    {/* --- Status Column --- */}
+                    <td className="status-cell">
+                      {claim.Status === "Approved" && (
+                        <span className="status-tag status-approved">
+                          Approved
+                        </span>
+                      )}
+                      {claim.Status === "Rejected" && (
+                        <span className="status-tag status-rejected">
+                          Rejected
+                        </span>
+                      )}
+                      {claim.Status === "Hold" && (
+                        <span className="status-tag status-hold">On Hold</span>
+                      )}
+                    </td>
+                    {/* --- Information Column --- */}
+                    <td className="status-cell">
+                      {claim.Status === "Approved" && claim.DocumentURL && (
+                        <a
+                          href={claim.DocumentURL}
+                          className="download-btn"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => {
+                            e.preventDefault();
+
+                            // Set this claim's URL as downloading
+                            setDownloadingUrl(claim.DocumentURL);
+
+                            const delayMs = 1500;
+                            setTimeout(() => {
+                              window.open(claim.DocumentURL, "_blank");
+                              // Reset back to normal after opening
+                              setDownloadingUrl(null);
+                            }, delayMs);
+                          }}
+                        >
+                          {downloadingUrl === claim.DocumentURL
+                            ? "Downloading..."
+                            : "Download"}
+                        </a>
+                      )}
+                      {claim.Status === "Rejected" && claim.RejectionReason && (
+                        <span className="rejection-reason">
+                          {claim.RejectionReason}
+                        </span>
+                      )}
+                      {/* Nothing for On Hold */}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </main>
-        
+
         <footer className="footer">
-            <p>Content managed by Ministry of Tribal Affairs, Govt. of India</p>
-            <div className="separator"></div>
-            <p>Website design and development by VanSetu</p>
+          <p>Content managed by Ministry of Tribal Affairs, Govt. of India</p>
+          <div className="separator"></div>
+          <p>Website design and development by VanSetu</p>
         </footer>
       </div>
     </div>
   );
 }
-
