@@ -100,7 +100,7 @@ export default function PendingClaimsSidebar() {
         <>
             <style>{styles}</style>
             <div className="pending-claims-container">
-                <div className="claims-title">PENDING CLAIMS TO BE APPROVED</div>
+                <div className="claims-title">PENDING CLAIMS TO</div>
                 
                 {/* Table Headers */}
                 <div className="claims-table-header">

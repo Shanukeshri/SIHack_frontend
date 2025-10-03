@@ -9,7 +9,7 @@ const logoUrl = "ashok1.jpeg";
 const PendingClaimsSidebar = ({ pendingClaims, onClaimSelect }) => {
   return (
     <div className="pending-claims-container">
-      <div className="claims-title">PENDING CLAIMS TO BE APPROVED</div>
+      <div className="claims-title">PENDING CLAIMS</div>
       <div className="claims-table-header">
         <div className="table-header-cell">S.No.</div>
         <div className="table-header-cell">Claim ID</div>

@@ -238,7 +238,7 @@ export default function MapComponent({ mode = 1 }) {
         onClick={goToCurrentLocation}
         style={{
           position: "relative",
-          top: "-13vh",
+          top: "-15vh",
           right: "-90%",
           padding: "10px",
           borderRadius: "50%",
